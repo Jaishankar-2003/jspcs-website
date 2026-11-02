@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-ivory-50: #FAF9F6;
+    --color-ivory-100: #F5F3EE;
+    --color-ivory-200: #EAE6DC;
+    --color-ivory-300: #D8D2C2;
+    --color-graphite-800: #202321;
+    --color-graphite-900: #171918;
+    --color-burnt-500: #E66A35;
+    --color-burnt-600: #CF5522;
+    --color-sage-400: #A7B5A0;
+    --color-warmgrey-400: #77766F;
+    --border: 38 18% 85%;
+  }
+
+  body {
+    background-color: #F5F3EE;
+    color: #202321;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+}
+
+/* Subtle Technical Atelier Dot/Grid Backgrounds */
+.atelier-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(32, 35, 33, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(32, 35, 33, 0.05) 1px, transparent 1px);
+}
+
+.atelier-grid-dark {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+.atelier-dots {
+  background-image: radial-gradient(rgba(32, 35, 33, 0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.atelier-dots-dark {
+  background-image: radial-gradient(rgba(245, 243, 238, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Glassmorphism & Atelier Cards */
+@layer utilities {
+  .atelier-card {
+    background-color: #FFFFFF;
+    border: 1px solid #EAE6DC;
+    box-shadow: 0 10px 30px -10px rgba(23, 25, 24, 0.06);
+  }
+
+  .atelier-card-dark {
+    background-color: #202321;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  }
+
+  .atelier-card-darker {
+    background-color: #171918;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.6);
+  }
+
+  .text-burnt-gradient {
+    background: linear-gradient(135deg, #E66A35 0%, #FA7D47 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-graphite-gradient {
+    background: linear-gradient(135deg, #171918 0%, #3D423F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Reliable fallback utility styles */
+  .bg-ivory-50 { background-color: #FAF9F6; }
+  .bg-ivory-100 { background-color: #F5F3EE; }
+  .bg-ivory-200 { background-color: #EAE6DC; }
+  .bg-ivory-300 { background-color: #D8D2C2; }
+  
+  .bg-graphite-800 { background-color: #202321; }
+  .bg-graphite-900 { background-color: #171918; }
+  .bg-graphite-950 { background-color: #0F100F; }
+
+  .bg-burnt-500 { background-color: #E66A35; }
+  .bg-burnt-600 { background-color: #CF5522; }
+
+  .text-graphite-800 { color: #202321; }
+  .text-graphite-900 { color: #171918; }
+  .text-warmgrey-400 { color: #77766F; }
+  .text-burnt-500 { color: #E66A35; }
+  .text-sage-400 { color: #A7B5A0; }
+
+  .border-ivory-200 { border-color: #EAE6DC; }
+  .border-ivory-300 { border-color: #D8D2C2; }
+  .border-graphite-700 { border-color: #2C302D; }
+
+  /* Backward compatibility for previous class names */
+  .gradient-bg {
+    background-color: #F5F3EE;
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(234, 230, 220, 0.8);
+  }
+  .glass-strong {
+    background: rgba(32, 35, 33, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Atelier Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F3EE;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C2BCAB;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #77766F;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
