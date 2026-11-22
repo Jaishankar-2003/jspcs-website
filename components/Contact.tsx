@@ -15,7 +15,7 @@ import {
   Check
 } from 'lucide-react'
 import { useState, useRef } from 'react'
-import { sendInquiryEmail, generateMailtoLink, generateGmailWebLink } from '@/lib/send-inquiry-email'
+import { sendInquiryEmail } from '@/lib/send-inquiry-email'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -108,10 +108,9 @@ export default function Contact() {
 
     if (res.success) {
       setEmailSuccess(true)
+      setEmailError(null)
     } else {
-      setEmailError(res.error || 'Server dispatch issue. Opening email app fallback...')
-      // Open mailto fallback so inquiry is never dropped
-      window.open(generateMailtoLink(payload), '_blank')
+      setEmailError(res.error || 'Unable to deliver message via email right now. Please try again or reach us via WhatsApp.')
     }
   }
 
@@ -475,23 +474,17 @@ export default function Contact() {
                   </div>
                 )}
 
-                {/* Error Banner with Direct Client Mail Fallback */}
+                {/* Error Banner */}
                 {emailError && (
-                  <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium flex items-center justify-between gap-2">
+                  <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex items-center justify-between gap-2 animate-fadeIn">
                     <span>{emailError}</span>
-                    <a
-                      href={generateMailtoLink({
-                        formType: 'Bench Session / Service Request',
-                        name: formData.name,
-                        phone: formData.phone,
-                        email: formData.email,
-                        subject: `Service Request - ${formData.name}`,
-                        message: formData.message,
-                      })}
-                      className="underline font-bold text-burnt-600 hover:text-burnt-700 shrink-0"
+                    <button
+                      type="button"
+                      onClick={handleEmailSubmit}
+                      className="underline font-bold text-rose-700 hover:text-rose-900 shrink-0"
                     >
-                      Click to Open Mail App
-                    </a>
+                      Retry
+                    </button>
                   </div>
                 )}
               </div>

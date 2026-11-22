@@ -9,5 +9,12 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  "vars": {
+    "SMTP_HOST": "smtp.gmail.com",
+    "SMTP_PORT": "465",
+    "SMTP_SECURE": "true",
+    "SMTP_USER": "jaishankarpcservices2021@gmail.com",
+    "NOTIFICATION_EMAIL": "jaishankarpcservices2021@gmail.com"
   }
 }

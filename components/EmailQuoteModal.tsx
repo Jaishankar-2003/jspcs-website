@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { X, Mail, Phone, User, Send, CheckCircle2, AlertCircle, ShieldCheck, FileText } from 'lucide-react'
-import { sendInquiryEmail, generateMailtoLink } from '@/lib/send-inquiry-email'
+import { sendInquiryEmail } from '@/lib/send-inquiry-email'
 
 export interface EmailQuoteModalProps {
   isOpen: boolean
@@ -103,10 +103,10 @@ export default function EmailQuoteModal({
 
     if (res.success) {
       setSent(true)
+      setError(null)
       if (onSuccess) onSuccess()
     } else {
-      setError(res.error || 'Server dispatch issue. Opening direct mail fallback...')
-      window.open(generateMailtoLink(payload), '_blank')
+      setError(res.error || 'Unable to send email inquiry right now. Please try again or reach us on WhatsApp.')
     }
   }
 

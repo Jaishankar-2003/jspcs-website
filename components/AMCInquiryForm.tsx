@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Send, Mail, MessageCircle, Check } from 'lucide-react'
 import { AMC_PLANS } from '@/lib/amc-data'
 import { waLink } from '@/lib/site-config'
-import { sendInquiryEmail, generateMailtoLink } from '@/lib/send-inquiry-email'
+import { sendInquiryEmail } from '@/lib/send-inquiry-email'
 
 const NEEDS = ['Desktops / laptops', 'Printers', 'Network / Wi-Fi', 'Backup', 'Security', 'On-site visits', 'Remote support']
 
@@ -82,9 +82,9 @@ export default function AMCInquiryForm() {
 
     if (res.success) {
       setEmailSuccess(true)
+      setEmailError(null)
     } else {
-      setEmailError(res.error || 'Server dispatch issue. Opening mail app...')
-      window.open(generateMailtoLink(payload), '_blank')
+      setEmailError(res.error || 'Unable to deliver AMC inquiry via email right now. Please try again or connect via WhatsApp.')
     }
   }
 
@@ -204,20 +204,15 @@ export default function AMCInquiryForm() {
 
         {/* Error Fallback */}
         {emailError && (
-          <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium flex items-center justify-between gap-2">
+          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium flex items-center justify-between gap-2 animate-fadeIn">
             <span>{emailError}</span>
-            <a
-              href={generateMailtoLink({
-                formType: 'AMC Request',
-                name: form.name,
-                phone: form.phone,
-                subject: `AMC Quote - ${form.org || form.name}`,
-                message: form.message,
-              })}
-              className="underline font-bold text-burnt-600 shrink-0"
+            <button
+              type="button"
+              onClick={submitEmail}
+              className="underline font-bold text-rose-700 hover:text-rose-900 shrink-0"
             >
-              Open in Mail App
-            </a>
+              Retry
+            </button>
           </div>
         )}
       </div>

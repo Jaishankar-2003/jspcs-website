@@ -657,10 +657,10 @@ export default function ToolBadge({
   return (
     <span
       title={name}
-      className={`inline-flex items-center gap-1.5 rounded-lg border transition-all group ${
+      className={`inline-flex items-center gap-1.5 rounded-lg border transition-all group shrink-0 ${
         isDark
-          ? 'border-white/15 bg-white/10 text-ivory-100 hover:border-burnt-400 hover:bg-white/15'
-          : 'border-[#D9D4C7] bg-white text-graphite-900 shadow-sm hover:border-burnt-500 hover:shadow hover:bg-ivory-50/70'
+          ? 'border-white/20 bg-graphite-900 text-white hover:border-burnt-400 hover:bg-graphite-800'
+          : 'border-[#D8D2C2] bg-white text-graphite-900 shadow-sm hover:border-burnt-500 hover:shadow hover:bg-ivory-50'
       } ${isSm ? 'px-2 py-1 text-[11px]' : 'px-2.5 py-1.5 text-xs'} ${className}`}
     >
       <span
@@ -672,10 +672,10 @@ export default function ToolBadge({
       </span>
       {showLabel && (
         <span
-          className={`font-semibold transition-colors truncate max-w-[125px] ${
+          className={`font-bold transition-colors whitespace-nowrap ${
             isDark
-              ? 'text-ivory-100 group-hover:text-white'
-              : 'text-graphite-800 group-hover:text-burnt-600'
+              ? 'text-white group-hover:text-burnt-400'
+              : 'text-graphite-900 group-hover:text-burnt-600'
           }`}
         >
           {visual.label}
