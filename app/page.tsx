@@ -1,7 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
+import React from 'react'
 import Navbar from '@/components/Navbar'
 import HomeHero from '@/components/home/HomeHero'
 import ServicesOverview from '@/components/home/ServicesOverview'
@@ -22,123 +21,76 @@ import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import MobileActionBar from '@/components/MobileActionBar'
 import SectionHeader from '@/components/ui/SectionHeader'
-import { motion } from 'framer-motion'
-
-// Dynamic import — prevents SSR/WebGL issues
-const JSPCSIntro = dynamic(
-  () => import('@/components/intro/JSPCSIntro'),
-  { ssr: false, loading: () => null }
-)
-
-const INTRO_KEY = 'jspcs_intro_seen'
 
 export default function Home() {
-  const [mounted, setMounted] = useState(false)
-  const [showIntro, setShowIntro] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-
-    // Check reduced-motion preference and session flag
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const isMobile = window.innerWidth < 768
-    const alreadySeen = sessionStorage.getItem(INTRO_KEY) === 'true'
-
-    // Skip heavy intro on mobile screens for faster instant-load
-    if (!prefersReduced && !alreadySeen && !isMobile) {
-      setShowIntro(true)
-    }
-  }, [])
-
-  const handleIntroDone = () => {
-    sessionStorage.setItem(INTRO_KEY, 'true')
-    document.body.style.overflow = ''
-    document.body.style.height = ''
-    window.scrollTo({ top: 0, behavior: 'instant' })
-    setShowIntro(false)
-  }
-
-  if (!mounted) return null
-
   return (
-    <>
-      {/* ── Cinematic intro overlay (desktop first-visit, session-gated) ── */}
-      {showIntro && <JSPCSIntro onDone={handleIntroDone} />}
+    <main className="min-h-screen bg-[#F5F3EE] text-graphite-900 selection:bg-burnt-500 selection:text-white">
+      <Navbar />
 
-      {/* ── Main homepage ── */}
-      <motion.main
-        initial={{ opacity: showIntro ? 0 : 1 }}
-        animate={{ opacity: showIntro ? 0 : 1 }}
-        transition={{ duration: 0.5 }}
-        className="min-h-screen bg-[#F5F3EE] text-graphite-900 selection:bg-burnt-500 selection:text-white"
-      >
-        <Navbar />
+      {/* Hero Section: Immediate 6-Pillar Value Proposition */}
+      <HomeHero />
 
-        {/* Hero Section: Immediate 6-Pillar Value Proposition */}
-        <HomeHero />
+      {/* Priority 1: Laptop & Desktop Service */}
+      <ServicesOverview />
 
-        {/* Priority 1: Laptop & Desktop Service */}
-        <ServicesOverview />
+      {/* Priority 2: Custom PC Builds (9 Workload Categories) */}
+      <BuildsShowcase />
 
-        {/* Priority 2: Custom PC Builds (9 Workload Categories) */}
-        <BuildsShowcase />
+      {/* Interactive Guided PC-Build Configurator */}
+      <section id="build-my-pc" aria-labelledby="inquiry-heading" className="py-14 sm:py-24 bg-ivory-100 scroll-mt-20 border-t border-[#EAE6DC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <SectionHeader
+            id="inquiry-heading"
+            align="center"
+            eyebrow="Interactive PC-Build Inquiry"
+            title="Tell Us What You Need – We'll Plan Your Build."
+            description="No technical jargon required. Choose your primary purpose, set a budget range, and pick any preferences. We will generate a clear summary for WhatsApp."
+          />
+          <BuildInquiry />
+        </div>
+      </section>
 
-        {/* Interactive Guided PC-Build Configurator */}
-        <section id="build-my-pc" aria-labelledby="inquiry-heading" className="py-14 sm:py-24 bg-ivory-100 scroll-mt-20 border-t border-[#EAE6DC]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            <SectionHeader
-              id="inquiry-heading"
-              align="center"
-              eyebrow="Interactive PC-Build Inquiry"
-              title="Tell Us What You Need – We'll Plan Your Build."
-              description="No technical jargon required. Choose your primary purpose, set a budget range, and pick any preferences. We will generate a clear summary for WhatsApp."
-            />
-            <BuildInquiry />
-          </div>
-        </section>
+      {/* Priority 3: PC & IT AMC (Annual Maintenance Contracts) */}
+      <AMCShowcase />
 
-        {/* Priority 3: PC & IT AMC (Annual Maintenance Contracts) */}
-        <AMCShowcase />
+      {/* Priority 4: Hardware Upgrades (SSD, RAM, GPU, Cooling) */}
+      <UpgradesSection />
 
-        {/* Priority 4: Hardware Upgrades (SSD, RAM, GPU, Cooling) */}
-        <UpgradesSection />
+      {/* Priority 5: Chip-Level Repair Specialty */}
+      <ChipLevelSpecialty />
 
-        {/* Priority 5: Chip-Level Repair Specialty */}
-        <ChipLevelSpecialty />
+      {/* Priority 6: IT Support, Networking, Printers, Cloud & Security */}
+      <MoreITServices />
 
-        {/* Priority 6: IT Support, Networking, Printers, Cloud & Security */}
-        <MoreITServices />
+      {/* Engineering Integrity & How We Work */}
+      <TrustSection />
 
-        {/* Engineering Integrity & How We Work */}
-        <TrustSection />
+      {/* Verified Hardware Partners */}
+      <TrustedPartners />
 
-        {/* Verified Hardware Partners */}
-        <TrustedPartners />
+      {/* Accreditations & Formal Registration */}
+      <LicensesCertifications />
 
-        {/* Accreditations & Formal Registration */}
-        <LicensesCertifications />
+      {/* Verified Customer Reviews */}
+      <Testimonials />
 
-        {/* Verified Customer Reviews */}
-        <Testimonials />
+      {/* Bench Updates & Real Assembly Telemetry */}
+      <LatestPCUpdates />
 
-        {/* Bench Updates & Real Assembly Telemetry */}
-        <LatestPCUpdates />
+      {/* Priority 7: Knowledge Hub & Technical Guides */}
+      <RelatedArticles />
 
-        {/* Priority 7: Knowledge Hub & Technical Guides */}
-        <RelatedArticles />
+      {/* Laboratory Consultation & Contact */}
+      <Contact />
 
-        {/* Laboratory Consultation & Contact */}
-        <Contact />
+      {/* Complete Footer Directory */}
+      <Footer />
 
-        {/* Complete Footer Directory */}
-        <Footer />
+      {/* Desktop / Tablet Floating WhatsApp */}
+      <WhatsAppButton />
 
-        {/* Desktop / Tablet Floating WhatsApp */}
-        <WhatsAppButton />
-
-        {/* Mobile-First Sticky Action Bar */}
-        <MobileActionBar bookHref="#contact" bookLabel="Book Service" />
-      </motion.main>
-    </>
+      {/* Mobile-First Sticky Action Bar */}
+      <MobileActionBar bookHref="#contact" bookLabel="Book Service" />
+    </main>
   )
 }
