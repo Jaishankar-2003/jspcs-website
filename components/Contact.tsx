@@ -11,9 +11,11 @@ import {
   Send, 
   User, 
   Paperclip, 
-  ChevronDown 
+  ChevronDown,
+  Check
 } from 'lucide-react'
 import { useState, useRef } from 'react'
+import { sendInquiryEmail, generateMailtoLink, generateGmailWebLink } from '@/lib/send-inquiry-email'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -26,6 +28,9 @@ export default function Contact() {
   })
 
   const [files, setFiles] = useState<File[]>([])
+  const [emailSending, setEmailSending] = useState(false)
+  const [emailSuccess, setEmailSuccess] = useState(false)
+  const [emailError, setEmailError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,8 +39,21 @@ export default function Contact() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleWhatsAppSubmit = (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault()
+    if (!formData.name.trim()) {
+      alert('Please enter your name.')
+      return
+    }
+    if (!formData.phone.trim()) {
+      alert('Please enter your phone number.')
+      return
+    }
+    if (!formData.message.trim()) {
+      alert('Please describe your hardware issue or requirements.')
+      return
+    }
+
     let whatsappText = `*Direct WhatsApp Engineering Request*\n\n`
     whatsappText += `*Name:* ${formData.name}\n`
     whatsappText += `*Phone / WhatsApp:* ${formData.phone}\n`
@@ -51,6 +69,50 @@ export default function Contact() {
       `https://wa.me/919842139997?text=${encodeURIComponent(whatsappText)}`,
       '_blank'
     )
+  }
+
+  const handleEmailSubmit = async (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault()
+    if (!formData.name.trim()) {
+      alert('Please enter your name.')
+      return
+    }
+    if (!formData.phone.trim()) {
+      alert('Please enter your phone / WhatsApp number.')
+      return
+    }
+    if (!formData.message.trim()) {
+      alert('Please describe your hardware issue or requirements.')
+      return
+    }
+
+    setEmailSending(true)
+    setEmailError(null)
+
+    const payload = {
+      formType: 'Bench Session / Service Request',
+      name: formData.name.trim(),
+      phone: formData.phone.trim(),
+      email: formData.email.trim() || undefined,
+      subject: `Diagnostic Request: ${formData.serviceType} (${formData.name.trim()})`,
+      message: formData.message.trim(),
+      details: {
+        'Service Type': formData.serviceType,
+        'Device / Model': formData.deviceModel.trim() || 'Not specified',
+        'Attached Photos': files.length > 0 ? `${files.length} photo(s) ready` : 'None',
+      },
+    }
+
+    const res = await sendInquiryEmail(payload)
+    setEmailSending(false)
+
+    if (res.success) {
+      setEmailSuccess(true)
+    } else {
+      setEmailError(res.error || 'Server dispatch issue. Opening email app fallback...')
+      // Open mailto fallback so inquiry is never dropped
+      window.open(generateMailtoLink(payload), '_blank')
+    }
   }
 
   return (
@@ -175,18 +237,18 @@ export default function Contact() {
 
           </div>
 
-          {/* Right Column: Direct WhatsApp Engineering Request Form (Col 6-12) */}
+          {/* Right Column: Direct Engineering Request Form (Col 6-12) */}
           <div className="lg:col-span-7">
             <form
-              onSubmit={handleSubmit}
+              onSubmit={handleWhatsAppSubmit}
               className="rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#FFF5EE] via-[#F8F9FA] to-[#EDF2F7] border border-[#E2E8F0] p-4 sm:p-8 shadow-xl space-y-5 relative"
             >
               <div>
                 <h3 className="text-xl sm:text-2xl font-bold text-graphite-900 tracking-tight">
-                  Direct WhatsApp Engineering Request
+                  Direct Engineering Request & Consultation
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                  Fill in your hardware details below and our lead technician will review them immediately.
+                  Fill in your hardware details below. Reach us directly via WhatsApp or Official Email.
                 </p>
               </div>
 
@@ -362,19 +424,82 @@ export default function Contact() {
 
               </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl bg-gradient-to-r from-[#FF6B35] to-[#F2542D] hover:from-[#f05a22] hover:to-[#df4620] text-white font-mono text-[11px] sm:text-xs md:text-sm font-bold tracking-wider uppercase transition-all shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 active:scale-[0.99] text-center"
-              >
-                <Send className="w-4 h-4 -rotate-12 shrink-0" />
-                <span className="leading-snug">SEND TO LEAD TECHNICIAN VIA WHATSAPP</span>
-              </button>
+              {/* Dual Action Submit Buttons: Responsive Priority (Mobile WhatsApp first, Desktop Email first) */}
+              <div className="space-y-3 pt-2">
+                <div className="flex flex-col md:flex-row gap-3">
+                  {/* WhatsApp Button: Higher visual priority on mobile (order-1), secondary companion on desktop (md:order-2) */}
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppSubmit}
+                    className="order-1 md:order-2 flex-1 min-h-[50px] sm:min-h-[54px] py-3.5 px-4 sm:px-6 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.99] text-white font-mono text-[11px] sm:text-xs md:text-sm font-bold tracking-wider uppercase transition-all shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 text-center"
+                  >
+                    <MessageCircle className="w-4 h-4 fill-current shrink-0" />
+                    <span>SEND VIA WHATSAPP</span>
+                  </button>
+
+                  {/* Email Button: Higher priority on Laptop & Monitor (md:order-1), prominent gradient on desktop */}
+                  <button
+                    type="button"
+                    disabled={emailSending}
+                    onClick={handleEmailSubmit}
+                    className={`order-2 md:order-1 flex-1 min-h-[50px] sm:min-h-[54px] py-3.5 px-4 sm:px-6 rounded-2xl font-mono text-[11px] sm:text-xs md:text-sm font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 text-center active:scale-[0.99] ${
+                      emailSending
+                        ? 'bg-warmgrey-400 text-white cursor-wait'
+                        : 'bg-gradient-to-r from-[#FF6B35] to-[#F2542D] hover:from-[#f05a22] hover:to-[#df4620] text-white shadow-lg shadow-orange-500/25 md:ring-2 md:ring-burnt-500/30'
+                    }`}
+                  >
+                    {emailSending ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin shrink-0" />
+                        <span>SENDING EMAIL...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="w-4 h-4 shrink-0" />
+                        <span>SEND VIA OFFICIAL EMAIL</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Email Success Feedback Banner */}
+                {emailSuccess && (
+                  <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm font-medium flex items-start gap-2.5 animate-fadeIn">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5 stroke-[3]" />
+                    <div>
+                      <p className="font-bold text-emerald-800">Inquiry Emailed Successfully!</p>
+                      <p className="text-emerald-700 text-xs mt-0.5">
+                        Our lead technician has received your ticket at jaishankarpcservices2021@gmail.com and will reach out to you promptly.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Banner with Direct Client Mail Fallback */}
+                {emailError && (
+                  <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium flex items-center justify-between gap-2">
+                    <span>{emailError}</span>
+                    <a
+                      href={generateMailtoLink({
+                        formType: 'Bench Session / Service Request',
+                        name: formData.name,
+                        phone: formData.phone,
+                        email: formData.email,
+                        subject: `Service Request - ${formData.name}`,
+                        message: formData.message,
+                      })}
+                      className="underline font-bold text-burnt-600 hover:text-burnt-700 shrink-0"
+                    >
+                      Click to Open Mail App
+                    </a>
+                  </div>
+                )}
+              </div>
 
               {/* Security / Privacy Trust Text */}
               <div className="flex items-center justify-center gap-2 text-xs text-gray-600 font-sans pt-1">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Your data is safe with us. We reply instantly via WhatsApp.</span>
+                <span>Your data is confidential. We respond promptly via WhatsApp or Email.</span>
               </div>
             </form>
           </div>

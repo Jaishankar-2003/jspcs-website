@@ -1,6 +1,10 @@
-import { Check, Minus, MessageCircle } from 'lucide-react'
+'use client'
+
+import React, { useState } from 'react'
+import { Check, Minus, MessageCircle, Mail } from 'lucide-react'
 import { AMC_PLANS, AMC_COMPARISON } from '@/lib/amc-data'
 import { waLink } from '@/lib/site-config'
+import EmailQuoteModal from '@/components/EmailQuoteModal'
 
 function Cell({ value }: { value: string }) {
   if (value === '✓') return <Check className="w-4 h-4 text-sage-600 mx-auto lg:mx-0" aria-label="Included" />
@@ -16,6 +20,26 @@ const quote = (plan: string) =>
  * table scrolling); large screens get a classic comparison table.
  */
 export default function AMCComparison() {
+  const [modalData, setModalData] = useState<{
+    isOpen: boolean
+    title: string
+    category: string
+    quoteDetails?: Record<string, string | number | boolean | undefined | null>
+  }>({
+    isOpen: false,
+    title: '',
+    category: 'Annual Maintenance Contract',
+  })
+
+  const openQuoteModal = (title: string, category: string, quoteDetails?: Record<string, any>) => {
+    setModalData({
+      isOpen: true,
+      title,
+      category,
+      quoteDetails,
+    })
+  }
+
   return (
     <div>
       {/* Mobile / tablet: plan cards with every row */}
@@ -45,14 +69,35 @@ export default function AMCComparison() {
                 </div>
               ))}
             </dl>
-            <a
-              href={quote(plan.name)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 flex items-center justify-center gap-2 min-h-[46px] rounded-xl bg-burnt-500 hover:bg-burnt-600 text-white text-sm font-bold"
-            >
-              <MessageCircle className="w-4 h-4" /> Get a Custom Quote
-            </a>
+            <div className="mt-3 flex flex-col gap-2">
+              <a
+                href={quote(plan.name)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="order-1 flex items-center justify-center gap-2 min-h-[44px] rounded-xl bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.99] text-white text-xs font-bold shadow-sm"
+              >
+                <MessageCircle className="w-4 h-4 fill-current" /> Quote on WhatsApp
+              </a>
+              <button
+                type="button"
+                onClick={() =>
+                  openQuoteModal(
+                    `AMC Plan ${plan.letter}: ${plan.name}`,
+                    'AMC Comparison Plan',
+                    {
+                      'Plan Name': plan.name,
+                      'Plan Letter': `Plan ${plan.letter}`,
+                      'Tagline': plan.tagline,
+                      'Target Audience': plan.forWho.join(', '),
+                      'Included Coverage': plan.coverage.slice(0, 4).join(', '),
+                    }
+                  )
+                }
+                className="order-2 flex items-center justify-center gap-2 min-h-[44px] rounded-xl bg-burnt-500 hover:bg-burnt-600 active:scale-[0.99] text-white text-xs font-bold"
+              >
+                <Mail className="w-4 h-4" /> Quote via Email
+              </button>
+            </div>
           </article>
         ))}
       </div>
@@ -92,14 +137,35 @@ export default function AMCComparison() {
               <td className="p-4" />
               {AMC_PLANS.map(p => (
                 <td key={p.id} className="p-4">
-                  <a
-                    href={quote(p.name)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 min-h-[44px] px-4 rounded-xl bg-burnt-500 hover:bg-burnt-600 text-white text-xs font-bold"
-                  >
-                    <MessageCircle className="w-4 h-4" /> Get Quote
-                  </a>
+                  <div className="flex flex-col gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        openQuoteModal(
+                          `AMC Plan ${p.letter}: ${p.name}`,
+                          'AMC Comparison Quote',
+                          {
+                            'Plan Name': p.name,
+                            'Plan Letter': `Plan ${p.letter}`,
+                            'Tagline': p.tagline,
+                            'Target Audience': p.forWho.join(', '),
+                            'Included Coverage': p.coverage.slice(0, 4).join(', '),
+                          }
+                        )
+                      }
+                      className="inline-flex items-center justify-center gap-1.5 min-h-[38px] px-3 rounded-xl bg-burnt-500 hover:bg-burnt-600 active:scale-[0.99] text-white text-xs font-bold shadow-sm"
+                    >
+                      <Mail className="w-3.5 h-3.5" /> Quote via Email
+                    </button>
+                    <a
+                      href={quote(p.name)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 min-h-[38px] px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5 fill-current" /> WhatsApp
+                    </a>
+                  </div>
                 </td>
               ))}
             </tr>
@@ -110,6 +176,15 @@ export default function AMCComparison() {
         Coverage, visit frequency and response targets are confirmed in your written agreement. Response time is when we start
         working on an issue – it is not a promise of how long the fix will take.
       </p>
+
+      {/* Attractive Email Quote Modal */}
+      <EmailQuoteModal
+        isOpen={modalData.isOpen}
+        onClose={() => setModalData(prev => ({ ...prev, isOpen: false }))}
+        title={modalData.title}
+        category={modalData.category}
+        quoteDetails={modalData.quoteDetails}
+      />
     </div>
   )
 }

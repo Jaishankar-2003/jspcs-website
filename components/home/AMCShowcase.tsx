@@ -17,11 +17,13 @@ import {
   AlertTriangle,
   Sparkles,
   PhoneCall,
-  Laptop
+  Laptop,
+  Mail
 } from 'lucide-react'
 import SectionHeader from '@/components/ui/SectionHeader'
 import { AMC_PLANS } from '@/lib/amc-data'
 import { waLink } from '@/lib/site-config'
+import EmailQuoteModal from '@/components/EmailQuoteModal'
 
 const FLEET_SIZES = [
   { id: '1-pc', label: '1 PC / Laptop', recommended: 'home', tag: 'Personal & Student' },
@@ -67,6 +69,25 @@ const AMC_PILLARS = [
 export default function AMCShowcase() {
   const [activeAudience, setActiveAudience] = useState<'business' | 'home'>('business')
   const [selectedFleet, setSelectedFleet] = useState('6-15-pc')
+  const [modalData, setModalData] = useState<{
+    isOpen: boolean
+    title: string
+    category: string
+    quoteDetails?: Record<string, string | number | boolean | undefined | null>
+  }>({
+    isOpen: false,
+    title: '',
+    category: 'Annual Maintenance Contract',
+  })
+
+  const openQuoteModal = (title: string, category: string, quoteDetails?: Record<string, any>) => {
+    setModalData({
+      isOpen: true,
+      title,
+      category,
+      quoteDetails,
+    })
+  }
 
   const currentFleetObj = FLEET_SIZES.find(f => f.id === selectedFleet) || FLEET_SIZES[2]
   const highlightedPlanId = currentFleetObj.recommended
@@ -184,14 +205,33 @@ export default function AMCShowcase() {
               </div>
             </div>
 
-            <a
-              href={waLink(`Hi JSPCS, I would like to get an AMC quote for my ${currentFleetObj.label} (${currentFleetObj.tag}) in Madurai. Please share the details.`)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 min-h-[46px] px-6 rounded-xl bg-burnt-500 hover:bg-burnt-600 text-white font-bold text-sm shadow-md transition-all shrink-0"
-            >
-              <MessageCircle className="w-4 h-4" /> Get Quote for {currentFleetObj.label}
-            </a>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+              <a
+                href={waLink(`Hi JSPCS, I would like to get an AMC quote for my ${currentFleetObj.label} (${currentFleetObj.tag}) in Madurai. Please share the details.`)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="order-1 md:order-2 inline-flex items-center justify-center gap-2 min-h-[46px] px-5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.99] text-white font-bold text-xs sm:text-sm shadow-md transition-all text-center"
+              >
+                <MessageCircle className="w-4 h-4 fill-current shrink-0" /> Quote on WhatsApp
+              </a>
+              <button
+                type="button"
+                onClick={() =>
+                  openQuoteModal(
+                    `AMC Quote for ${currentFleetObj.label}`,
+                    'AMC Fleet Support',
+                    {
+                      'Fleet Size': currentFleetObj.label,
+                      'Target Segment': currentFleetObj.tag,
+                      'Recommended Plan': `${AMC_PLANS.find(p => p.id === highlightedPlanId)?.name} (Plan ${AMC_PLANS.find(p => p.id === highlightedPlanId)?.letter})`,
+                    }
+                  )
+                }
+                className="order-2 md:order-1 inline-flex items-center justify-center gap-2 min-h-[46px] px-5 rounded-xl bg-burnt-500 hover:bg-burnt-600 active:scale-[0.99] text-white font-bold text-xs sm:text-sm shadow-md transition-all text-center"
+              >
+                <Mail className="w-4 h-4 shrink-0" /> Quote via Email
+              </button>
+            </div>
           </div>
         </div>
 
@@ -340,20 +380,41 @@ export default function AMCShowcase() {
                     ))}
                   </div>
 
-                  {/* CTA */}
+                  {/* CTA: Dual responsive actions (WhatsApp mobile priority, Email desktop priority) */}
                   <div className="mt-6 pt-5 border-t border-ivory-200/80 space-y-2">
-                    <a
-                      href={waLink(`Hi JSPCS, I want to inquire about the "${plan.name}" (Plan ${plan.letter}) for my setup in Madurai. Please share terms and quote.`)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`w-full inline-flex items-center justify-center gap-2 min-h-[48px] px-5 rounded-xl text-sm font-bold transition-all ${
-                        isSelectedByFleet || isSmallBusiness
-                          ? 'bg-burnt-500 hover:bg-burnt-600 text-white shadow-md shadow-burnt-500/20'
-                          : 'bg-graphite-900 hover:bg-graphite-800 text-white'
-                      }`}
-                    >
-                      <MessageCircle className="w-4 h-4" /> Request Plan {plan.letter} Quote
-                    </a>
+                    <div className="flex flex-col gap-2">
+                      <a
+                        href={waLink(`Hi JSPCS, I want to inquire about the "${plan.name}" (Plan ${plan.letter}) for my setup in Madurai. Please share terms and quote.`)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="order-1 md:order-2 w-full inline-flex items-center justify-center gap-2 min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.99] text-white shadow-sm transition-all"
+                      >
+                        <MessageCircle className="w-4 h-4 fill-current shrink-0" /> Quote on WhatsApp
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openQuoteModal(
+                            `AMC Plan ${plan.letter}: ${plan.name}`,
+                            'Annual Maintenance Contract',
+                            {
+                              'Plan Name': plan.name,
+                              'Plan Letter': `Plan ${plan.letter}`,
+                              'Tagline': plan.tagline,
+                              'Target Audience': plan.forWho.join(', '),
+                              'Included Coverage': plan.coverage.slice(0, 4).join(', '),
+                            }
+                          )
+                        }
+                        className={`order-2 md:order-1 w-full inline-flex items-center justify-center gap-2 min-h-[46px] px-4 rounded-xl text-xs sm:text-sm font-bold transition-all active:scale-[0.99] ${
+                          isSelectedByFleet || isSmallBusiness
+                            ? 'bg-burnt-500 hover:bg-burnt-600 text-white shadow-md shadow-burnt-500/20'
+                            : 'bg-graphite-900 hover:bg-graphite-800 text-white'
+                        }`}
+                      >
+                        <Mail className="w-4 h-4 shrink-0" /> Quote via Email
+                      </button>
+                    </div>
                   </div>
                 </div>
               )
@@ -419,6 +480,15 @@ export default function AMCShowcase() {
         </div>
 
       </div>
+
+      {/* Attractive Email Quote Modal */}
+      <EmailQuoteModal
+        isOpen={modalData.isOpen}
+        onClose={() => setModalData(prev => ({ ...prev, isOpen: false }))}
+        title={modalData.title}
+        category={modalData.category}
+        quoteDetails={modalData.quoteDetails}
+      />
     </section>
   )
 }

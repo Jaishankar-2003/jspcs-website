@@ -23,9 +23,11 @@ import {
   Tv,
   Palette,
   Maximize2,
-  CheckCircle2
+  CheckCircle2,
+  Mail
 } from 'lucide-react'
 import { waLink } from '@/lib/site-config'
+import EmailQuoteModal from '@/components/EmailQuoteModal'
 
 interface PurposeMeta {
   title: string
@@ -181,6 +183,8 @@ export default function BuildInquiry({ initialPurpose, compact = false }: BuildI
   const [notes, setNotes] = useState('')
   const [name, setName] = useState('')
   const [copied, setCopied] = useState(false)
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
+  const [emailSentSuccess, setEmailSentSuccess] = useState(false)
 
   const togglePurpose = (p: string) => {
     setPurposes(prev => {
@@ -822,17 +826,43 @@ export default function BuildInquiry({ initialPurpose, compact = false }: BuildI
             </div>
           </div>
 
-          {/* Action CTAs - Spacious & touch-friendly */}
+          {/* Action CTAs - Responsive Mobile WhatsApp Priority vs Desktop Email Priority */}
           <div className="space-y-3 pt-2">
-            <a
-              href={waLink(summary)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full inline-flex items-center justify-center gap-2.5 min-h-[54px] px-6 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.99] text-white font-bold text-base shadow-lg shadow-[#25D366]/25 transition-all"
-            >
-              <MessageCircle className="w-5 h-5 fill-current" aria-hidden="true" />
-              Send Build Ticket on WhatsApp
-            </a>
+            <div className="flex flex-col md:flex-row gap-3">
+              {/* WhatsApp Button: Higher priority on mobile (order-1), secondary companion on desktop (md:order-2) */}
+              <a
+                href={waLink(summary)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="order-1 md:order-2 flex-1 inline-flex items-center justify-center gap-2.5 min-h-[52px] sm:min-h-[54px] px-5 sm:px-6 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-lg shadow-[#25D366]/25 transition-all text-center"
+              >
+                <MessageCircle className="w-5 h-5 fill-current shrink-0" aria-hidden="true" />
+                <span>Send Ticket on WhatsApp</span>
+              </a>
+
+              {/* Email Button: Opens the attractive contact details popup modal */}
+              <button
+                type="button"
+                onClick={() => setIsEmailModalOpen(true)}
+                className="order-2 md:order-1 flex-1 inline-flex items-center justify-center gap-2.5 min-h-[52px] sm:min-h-[54px] px-5 sm:px-6 rounded-2xl font-bold text-sm sm:text-base transition-all text-center active:scale-[0.99] bg-burnt-500 hover:bg-burnt-600 text-white shadow-lg shadow-burnt-500/25 md:ring-2 md:ring-burnt-500/30"
+              >
+                <Mail className="w-5 h-5 shrink-0" aria-hidden="true" />
+                <span>Send Ticket via Email</span>
+              </button>
+            </div>
+
+            {/* Email Success Feedback Banner */}
+            {emailSentSuccess && (
+              <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm font-medium flex items-start gap-2.5 animate-fadeIn">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5 stroke-[3]" />
+                <div>
+                  <p className="font-bold text-emerald-800">Build Ticket Emailed Successfully!</p>
+                  <p className="text-emerald-700 text-xs mt-0.5">
+                    Our lead bench technician has received your blueprint at jaishankarpcservices2021@gmail.com and will prepare an itemized quote for you.
+                  </p>
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-2.5">
               <button
@@ -898,6 +928,28 @@ export default function BuildInquiry({ initialPurpose, compact = false }: BuildI
           </div>
         </div>
       )}
+
+      {/* Attractive Email Quote Modal */}
+      <EmailQuoteModal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        title={`Custom PC Specification Ticket (${activeBudget})`}
+        category="Custom PC Atelier Build"
+        initialName={name}
+        message={summary}
+        quoteDetails={{
+          'Workloads': purposes.join(', '),
+          'Target Budget': activeBudget,
+          'Processor': cpuName,
+          'Graphics Card': gpuName,
+          'Aesthetic': aestheticName,
+          'Form Factor': formFactorName,
+          'Monitor Included': needMonitor ? 'Yes' : 'Existing',
+          'Parts to Reuse': existing.trim() || 'None',
+          'Software / Games': notes.trim() || 'None',
+        }}
+        onSuccess={() => setEmailSentSuccess(true)}
+      />
     </div>
   )
 }
