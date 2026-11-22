@@ -143,13 +143,21 @@ export default function ServiceMegaMenu() {
                       </div>
                       <div>
                         <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
-                          Custom Rigs
+                          Custom PC Builds
                         </h4>
-                        <p className="text-[11px] text-ivory-300/60">Architectural PC Builds</p>
+                        <p className="text-[11px] text-ivory-300/60">Workload-Tailored Hardware</p>
                       </div>
                     </div>
 
                     <div className="space-y-1">
+                      <Link
+                        href="/custom-pc-builds"
+                        onClick={() => setIsOpen(false)}
+                        className="group flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-bold text-burnt-400 bg-white/5 hover:bg-burnt-500 hover:text-white transition-colors"
+                      >
+                        <span>⚡ All 9 Workload Builds Hub</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </Link>
                       {pcBuildRoutes.map((route) => (
                         <Link
                           key={route.href}
@@ -163,6 +171,16 @@ export default function ServiceMegaMenu() {
                           <ArrowRight className="w-3 h-3 text-burnt-500 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         </Link>
                       ))}
+                      <Link
+                        href="/computer-amc-service-madurai"
+                        onClick={() => setIsOpen(false)}
+                        className="group flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-ivory-200 hover:text-white hover:bg-white/5 transition-colors"
+                      >
+                        <span className="font-medium group-hover:text-burnt-400 transition-colors">
+                          Annual Maintenance (AMC)
+                        </span>
+                        <ArrowRight className="w-3 h-3 text-burnt-500 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                      </Link>
                     </div>
                   </div>
 
@@ -170,10 +188,10 @@ export default function ServiceMegaMenu() {
                   <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3 space-y-2">
                     <div className="flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4 text-sage-400 shrink-0" />
-                      <span className="text-xs font-bold text-white">90-Day Warranty On Service</span>
+                      <span className="text-xs font-bold text-white">Genuine Parts &amp; Support</span>
                     </div>
                     <p className="text-[11px] text-ivory-300/70 leading-relaxed">
-                      All motherboard repairs & PC builds are stress-tested with OEM diagnostic benches.
+                      All repairs &amp; PC builds are tested on our bench prior to customer handover.
                     </p>
                     <a
                       href="tel:9842139997"

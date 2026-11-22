@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import LocalSEOPageLayout from '@/components/LocalSEOPageLayout'
+import AMCComparison from '@/components/AMCComparison'
+import AMCInquiryForm from '@/components/AMCInquiryForm'
 import { generateMetadata, localBusinessSchema, breadcrumbSchema, faqSchema } from '@/lib/seo-utils'
 
 export const dynamic = 'force-static'
@@ -100,6 +102,25 @@ export default function ComputerAMCServiceMadurai() {
         {href:'/data-recovery-service-madurai', label:'Data Recovery Service'},
         {href:'/laptop-service-center-in-madurai', label:'Laptop Repair Madurai'},
       ]}
-    />
+    >
+      <div id="amc-plans" className="space-y-6 pt-4 border-t border-[#EAE6DC]">
+        <div className="space-y-1">
+          <span className="font-mono text-xs font-bold uppercase tracking-widest text-burnt-500">
+            Interactive Plan Comparison
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-black text-graphite-900 tracking-tight">
+            Compare AMC Plans Side by Side
+          </h2>
+          <p className="text-sm text-warmgrey-500">
+            Clear coverage, visit frequency, and channel options tailored to home systems, freelancers, or offices.
+          </p>
+        </div>
+        <AMCComparison />
+      </div>
+
+      <div id="amc-inquiry" className="pt-8">
+        <AMCInquiryForm />
+      </div>
+    </LocalSEOPageLayout>
   )
 }

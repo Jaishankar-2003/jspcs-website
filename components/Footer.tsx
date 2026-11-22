@@ -72,18 +72,19 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Laboratory Services (Col 7-9) */}
+          {/* Services & Builds (Col 7-9) */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-burnt-400">
-              Laboratory Services
+              Services &amp; Builds
             </h4>
             <ul className="space-y-2 text-xs font-sans">
-              <li><Link href="/motherboard-repair-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Chip-Level Motherboard Repair</Link></li>
-              <li><Link href="/chip-level-service-in-madurai" className="text-ivory-300/70 hover:text-white transition-colors">BGA Rework & Reballing</Link></li>
-              <li><Link href="/custom-gaming-pc-build-in-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Custom Gaming PC Assembly</Link></li>
-              <li><Link href="/data-recovery-service-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Forensic Data Recovery</Link></li>
-              <li><Link href="/ssd-upgrade-service-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Gen4 NVMe SSD Migration</Link></li>
-              <li><Link href="/computer-amc-service-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Corporate Computer AMC</Link></li>
+              <li><Link href="/laptop-service-center-in-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Laptop Repair &amp; Service</Link></li>
+              <li><Link href="/desktop-repair-service-in-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Desktop PC Troubleshooting</Link></li>
+              <li><Link href="/custom-pc-builds" className="text-ivory-300/70 hover:text-white transition-colors">Custom PC Builds (9 Workloads)</Link></li>
+              <li><Link href="/computer-amc-service-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Annual Maintenance Contracts (AMC)</Link></li>
+              <li><Link href="/ssd-upgrade-service-madurai" className="text-ivory-300/70 hover:text-white transition-colors">SSD &amp; RAM Upgrades</Link></li>
+              <li><Link href="/chip-level-service-in-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Chip-Level Motherboard Repair</Link></li>
+              <li><Link href="/data-recovery-service-madurai" className="text-ivory-300/70 hover:text-white transition-colors">Data Recovery &amp; Backup</Link></li>
             </ul>
           </div>
 

@@ -40,6 +40,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ]
 
     const pcBuildRoutes = [
+        '/custom-pc-builds',
+        '/custom-pc-builds/gaming-streaming-pc',
+        '/custom-pc-builds/video-editing-content-creation-pc',
+        '/custom-pc-builds/software-development-pc',
+        '/custom-pc-builds/trading-multi-monitor-pc',
+        '/custom-pc-builds/ai-machine-learning-workstation',
+        '/custom-pc-builds/architecture-cad-3d-rendering-pc',
+        '/custom-pc-builds/gis-geospatial-workstation',
+        '/custom-pc-builds/server-nas-virtualization-pc',
+        '/custom-pc-builds/custom-special-purpose-pc',
         '/workstation-pc-build-madurai',
         '/rgb-gaming-pc-build-madurai',
         '/budget-gaming-pc-build-madurai',

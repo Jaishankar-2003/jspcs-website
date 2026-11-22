@@ -20,10 +20,11 @@ export default function Navbar() {
   }, [])
 
   const navLinks = [
-    { href: '#hardware-architecture', label: '3D Anatomy' },
-    { href: '#pc-builds', label: 'PC Builds', isPill: true },
-    { href: '#diagnostic-bench', label: 'Bench Protocol' },
-    { href: '#about', label: 'Laboratory' },
+    { href: '#services', label: 'Services' },
+    { href: '/custom-pc-builds', label: 'PC Builds', isPill: true },
+    { href: '#amc', label: 'AMC Plans' },
+    { href: '#upgrades', label: 'Upgrades' },
+    { href: '#chip-level', label: 'Chip-Level' },
     { href: '#contact', label: 'Contact' },
   ]
 
@@ -133,11 +134,11 @@ export default function Navbar() {
         >
           <div className="space-y-1.5">
             <a
-              href="/chip-level-service-in-madurai"
+              href="#services"
               onClick={() => setIsOpen(false)}
               className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-bold text-burnt-500 bg-burnt-500/10 border border-burnt-500/20"
             >
-              <span>⚡ All Engineering Services</span>
+              <span>⚡ Laptop &amp; Desktop Services</span>
               <span className="text-xs font-mono">&rarr;</span>
             </a>
             {navLinks.map((link) => (

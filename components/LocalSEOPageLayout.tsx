@@ -44,6 +44,7 @@ export interface LocalSEOPageProps {
   // CTA
   ctaHeading?: string
   ctaDescription?: string
+  children?: React.ReactNode
 }
 
 const PHONE = '9842139997'
@@ -64,6 +65,7 @@ export default function LocalSEOPageLayout({
   relatedPages = [],
   ctaHeading,
   ctaDescription,
+  children,
 }: LocalSEOPageProps) {
   return (
     <>
@@ -245,6 +247,8 @@ export default function LocalSEOPageLayout({
               </section>
             ))}
           </div>
+
+          {children && <div className="mt-14 space-y-12">{children}</div>}
         </main>
 
         {/* ── FAQ Section ──────────────────────────────────────── */}
